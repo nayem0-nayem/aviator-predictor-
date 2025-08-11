@@ -1,115 +1,128 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Password validation
-    const passwordInput = document.getElementById('passwordInput');
-    passwordInput.addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-            checkPassword();
-        }
-    });
+// DOM elements
+const predictionValue = document.getElementById('predictionValue');
+const confidenceFill = document.getElementById('confidenceFill');
+const confidencePercent = document.getElementById('confidencePercent');
+const verificationResult = document.getElementById('verificationResult');
+const historyList = document.getElementById('historyList');
 
-    // Site selection buttons
-    const siteButtons = document.querySelectorAll('.site-btn');
-    siteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            selectSite(this.dataset.site);
-        });
-    });
+// Game state
+let gameHistory = [];
 
-    // Prediction circle click event
-    const predictionCircle = document.getElementById('predictionCircle');
-    predictionCircle.addEventListener('click', function() {
-        generateNewPrediction();
-    });
-
-    // Hide dashboard initially
-    document.getElementById('dashboard').style.display = 'none';
-});
-
-function checkPassword() {
-    const password = document.getElementById('passwordInput').value;
-    const correctPassword = 'jerin.i.love.u';
+// Initialize
+function init() {
+    // Load any saved history
+    const savedHistory = localStorage.getItem('aviatorHistory');
+    if (savedHistory) {
+        gameHistory = JSON.parse(savedHistory);
+        updateHistoryDisplay();
+    }
     
-    if (password === correctPassword) {
-        document.getElementById('passwordSection').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'flex';
-        startPredictionCycle();
-    } else {
-        alert('Incorrect password! Please try again.');
-        document.getElementById('passwordInput').value = '';
-        document.getElementById('passwordInput').focus();
+    // Start prediction loop
+    simulatePredictionLoop();
+}
+
+// Provable fair verification
+async function verifyRound() {
+    const serverSeed = document.getElementById('serverSeed').value;
+    const clientSeed = document.getElementById('clientSeed').value;
+    const nonce = document.getElementById('nonce').value;
+    
+    if (!serverSeed || !clientSeed || !nonce) {
+        verificationResult.textContent = "Please fill all fields";
+        return;
+    }
+    
+    try {
+        const crashPoint = await calculateCrashPoint(serverSeed, clientSeed, nonce);
+        verificationResult.innerHTML = `
+            <strong>Verification Successful</strong><br>
+            Calculated Crash Point: <strong>${crashPoint.toFixed(2)}x</strong>
+        `;
+    } catch (error) {
+        verificationResult.textContent = "Error: " + error.message;
     }
 }
 
-function selectSite(site) {
-    // Update active button
-    document.querySelectorAll('.site-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
+async function calculateCrashPoint(serverSeed, clientSeed, nonce) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(`${serverSeed}-${clientSeed}-${nonce}`);
     
-    // Activate selected button
-    document.querySelector(`.site-btn[data-site="${site}"]`).classList.add('active');
+    const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(serverSeed),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
     
-    // Save selected site to localStorage
-    localStorage.setItem('selectedSite', site);
+    const signature = await crypto.subtle.sign("HMAC", key, data);
+    const byteArray = new Uint8Array(signature);
+    const hexDigest = Array.from(byteArray).map(b => b.toString(16).padStart(2, '0')).join('');
     
-    // Generate new prediction
-    generateNewPrediction();
+    const decimal = parseInt(hexDigest.substring(0, 8), 16);
+    return Math.max(1.0, 1000000 / (decimal % 1000000 + 1));
 }
 
-function generatePrediction() {
-    // For demo purposes - replace with your actual prediction logic
-    const sites = {
-        '1xbet': { min: 1.5, max: 15.0 },
-        'mostbet': { min: 1.3, max: 12.0 },
-        'parimatch': { min: 1.4, max: 14.0 }
+// Prediction simulation (replace with actual model later)
+function simulatePredictionLoop() {
+    // Generate a random prediction between 1.0 and 10.0
+    const prediction = 1 + Math.random() * 9;
+    const confidence = Math.min(95, Math.round(prediction * 10));
+    
+    // Update display
+    predictionValue.textContent = prediction.toFixed(2) + 'x';
+    confidenceFill.style.width = confidence + '%';
+    confidencePercent.textContent = confidence + '%';
+    
+    // Color coding
+    if (prediction > 2.5) {
+        predictionValue.style.color = '#2ecc71';
+    } else if (prediction > 1.8) {
+        predictionValue.style.color = '#f39c12';
+    } else {
+        predictionValue.style.color = '#e74c3c';
+    }
+    
+    // Add to history every 5-15 seconds
+    if (Math.random() > 0.7) {
+        addToHistory(prediction);
+    }
+    
+    // Repeat every 2 seconds
+    setTimeout(simulatePredictionLoop, 2000);
+}
+
+function addToHistory(prediction) {
+    const actual = prediction * (0.9 + Math.random() * 0.2); // Simulate actual result
+    const historyItem = {
+        round: gameHistory.length + 1,
+        predicted: prediction,
+        actual: actual,
+        timestamp: new Date().toLocaleTimeString()
     };
     
-    const selectedSite = localStorage.getItem('selectedSite') || '1xbet';
-    const config = sites[selectedSite];
+    gameHistory.push(historyItem);
+    if (gameHistory.length > 20) gameHistory.shift();
     
-    // More realistic prediction distribution
-    const rand = Math.random();
-    let prediction;
+    // Save to localStorage
+    localStorage.setItem('aviatorHistory', JSON.stringify(gameHistory));
     
-    if (rand < 0.5) {
-        // Common multipliers (min-2.0x)
-        prediction = config.min + Math.random() * (2.0 - config.min);
-    } else if (rand < 0.8) {
-        // Medium multipliers (2.0x-4.0x)
-        prediction = 2.0 + Math.random() * 2.0;
-    } else if (rand < 0.95) {
-        // High multipliers (4.0x-8.0x)
-        prediction = 4.0 + Math.random() * 4.0;
-    } else {
-        // Very high multipliers (8.0x-max)
-        prediction = 8.0 + Math.random() * (config.max - 8.0);
-    }
-    
-    return prediction.toFixed(2);
+    updateHistoryDisplay();
 }
 
-function updatePredictionDisplay(value) {
-    const display = document.getElementById('predictionValue');
-    display.textContent = value + 'x';
-    
-    // Add pulse animation
-    display.classList.remove('pulse');
-    void display.offsetWidth; // Trigger reflow
-    display.classList.add('pulse');
+function updateHistoryDisplay() {
+    historyList.innerHTML = '';
+    gameHistory.slice().reverse().forEach(item => {
+        const elem = document.createElement('div');
+        elem.className = 'history-item';
+        elem.innerHTML = `
+            <div>Round: ${item.round}</div>
+            <div>Predicted: <strong>${item.predicted.toFixed(2)}x</strong></div>
+            <div>Actual: <strong>${item.actual.toFixed(2)}x</strong></div>
+        `;
+        historyList.appendChild(elem);
+    });
 }
 
-function generateNewPrediction() {
-    const prediction = generatePrediction();
-    updatePredictionDisplay(prediction);
-}
-
-function startPredictionCycle() {
-    // Set initial site if not set
-    if (!localStorage.getItem('selectedSite')) {
-        localStorage.setItem('selectedSite', '1xbet');
-        document.querySelector('.site-btn[data-site="1xbet"]').classList.add('active');
-    }
-    
-    // Initial prediction
-    generateNewPrediction();
-}
+// Start the app
+init();
