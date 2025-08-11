@@ -3,50 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Predictor Pro</title>
+    <title>Aviator Predictor</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Password Section -->
-    <div class="password-container" id="passwordSection">
-        <div class="password-box">
-            <h2>Aviator Predictor Pro</h2>
-            <input 
-                type="password" 
-                class="password-input" 
-                id="passwordInput" 
-                placeholder="Enter Password" 
-                autocomplete="off"
-            >
-            <button class="submit-btn" onclick="checkPassword()">Enter</button>
-        </div>
-    </div>
-
-    <!-- Main Dashboard -->
-    <div class="dashboard" id="dashboard">
-        <!-- Header -->
-        <div class="header">
-            <h1>Created by JN. Nayem</h1>
-        </div>
-
-        <!-- Site Selection -->
-        <div class="site-selection">
-            <button class="site-btn active" data-site="1xbet">1xBet</button>
-            <button class="site-btn" data-site="mostbet">Mostbet</button>
-            <button class="site-btn" data-site="parimatch">Parimatch</button>
-        </div>
-
-        <!-- Prediction Display -->
-        <div class="prediction-container">
-            <div class="prediction-circle" id="predictionCircle">
-                <div class="prediction-value" id="predictionValue">1.85x</div>
+    <div class="container">
+        <h1>Aviator Predictor</h1>
+        <div class="game-container">
+            <div class="prediction-section">
+                <h2>Next Round Prediction</h2>
+                <div id="predictionValue" class="prediction-value">1.00x</div>
+                <div class="confidence-meter">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+                <p class="confidence-text">Confidence: <span id="confidencePercent">0%</span></p>
             </div>
-            <div class="click-hint">Click circle for new prediction</div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>© 2024 Aviator Predictor Pro | All Rights Reserved</p>
+            
+            <div class="verification-section">
+                <h3>Provable Fair Verification</h3>
+                <div class="input-group">
+                    <input type="text" id="serverSeed" placeholder="Server Seed">
+                    <input type="text" id="clientSeed" placeholder="Client Seed" value="user123">
+                    <input type="number" id="nonce" placeholder="Nonce" value="1">
+                    <button onclick="verifyRound()">Verify Round</button>
+                </div>
+                <div id="verificationResult" class="verification-result"></div>
+            </div>
+            
+            <div class="history-section">
+                <h3>Recent History</h3>
+                <div id="historyList" class="history-list">
+                    <!-- History will be populated here -->
+                </div>
+            </div>
         </div>
     </div>
 
