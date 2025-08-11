@@ -136,6 +136,7 @@ body {
 /* Prediction Display */
 .prediction-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 30px 0;
@@ -152,6 +153,17 @@ body {
     box-shadow: 0 0 30px rgba(0, 100, 255, 0.7);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.prediction-circle:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(0, 150, 255, 0.8);
+}
+
+.prediction-circle:active {
+    transform: scale(0.98);
 }
 
 .prediction-circle::before {
@@ -170,15 +182,15 @@ body {
     text-shadow: 0 0 15px rgba(255, 50, 50, 0.7);
     z-index: 1;
     position: relative;
+    user-select: none;
 }
 
-/* Footer */
-.footer {
-    margin-top: auto;
+.click-hint {
+    margin-top: 20px;
+    color: #00aaff;
+    font-size: 16px;
     text-align: center;
-    padding: 20px 0;
-    color: #888;
-    font-size: 14px;
+    animation: pulse-text 2s infinite;
 }
 
 /* Animation for Prediction */
@@ -188,8 +200,23 @@ body {
     100% { transform: scale(1); }
 }
 
+@keyframes pulse-text {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
 .pulse {
     animation: pulse 0.5s ease-in-out;
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px 0;
+    color: #888;
+    font-size: 14px;
 }
 
 /* Responsive Design */
@@ -216,6 +243,10 @@ body {
     
     .header h1 {
         font-size: 28px;
+    }
+    
+    .click-hint {
+        font-size: 14px;
     }
 }
 
@@ -251,5 +282,9 @@ body {
     
     .header h1 {
         font-size: 24px;
+    }
+    
+    .click-hint {
+        font-size: 12px;
     }
 }
