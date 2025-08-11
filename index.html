@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <!-- Main Application (hidden until authenticated) -->
+    <!-- Main Application -->
     <div id="appContainer" class="container" style="display:none;">
         <header>
             <div class="creator-header">
@@ -28,10 +28,6 @@
                 <p>Created By <span class="creator">JN.NAYEM</span></p>
             </div>
             <div class="header-controls">
-                <div class="session-timer">
-                    <span>Session expires in: </span>
-                    <span id="sessionTimer">05:00</span>
-                </div>
                 <button class="logout-btn" onclick="logout()">Lock System</button>
             </div>
         </header>
@@ -52,27 +48,38 @@
             </div>
         </div>
 
+        <!-- Automated Provable Fair Verification -->
         <div class="verification-section">
-            <h3>Provable Fair Verification</h3>
-            <div class="input-group">
-                <input type="text" id="serverSeed" placeholder="Server Seed">
-                <input type="text" id="clientSeed" placeholder="Client Seed" value="user123">
-                <input type="number" id="nonce" placeholder="Nonce" value="1">
-                <button onclick="verifyRound()">Verify Round</button>
+            <h3>Automated Provable Fair Verification</h3>
+            <div class="verification-data">
+                <div class="data-item">
+                    <span>Server Seed:</span>
+                    <span id="serverSeedDisplay" class="seed-value"></span>
+                </div>
+                <div class="data-item">
+                    <span>Client Seed:</span>
+                    <span id="clientSeedDisplay" class="seed-value"></span>
+                </div>
+                <div class="data-item">
+                    <span>Nonce:</span>
+                    <span id="nonceDisplay" class="seed-value"></span>
+                </div>
+                <div class="data-item result">
+                    <span>Calculated Crash Point:</span>
+                    <span id="crashPointDisplay" class="result-value">1.00x</span>
+                </div>
             </div>
-            <div id="verificationResult" class="verification-result"></div>
+            <button class="verify-btn" onclick="autoVerifyRound()">Re-verify Current Round</button>
         </div>
 
         <div class="history-section">
-            <h3>Prediction History <span class="refresh-btn" onclick="refreshData()">↻ Refresh</span></h3>
-            <div id="historyList" class="history-list">
-                <!-- History will be populated here -->
-            </div>
+            <h3>Prediction History</h3>
+            <div id="historyList" class="history-list"></div>
         </div>
 
         <div class="info-section">
             <p>🚨 Important: Predictions are statistical estimates only. There is no guaranteed outcome in gambling.</p>
-            <p>🔒 Session ID: <span id="sessionId"></span></p>
+            <p>🔒 System Status: <span id="systemStatus">Active</span></p>
         </div>
     </div>
 
