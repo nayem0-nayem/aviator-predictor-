@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Predictor Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Password Section -->
+    <div class="password-container" id="passwordSection">
+        <div class="password-box">
+            <h2>Aviator Predictor Pro</h2>
+            <input 
+                type="password" 
+                class="password-input" 
+                id="passwordInput" 
+                placeholder="Enter Password" 
+                autocomplete="off"
+            >
+            <button class="submit-btn" onclick="checkPassword()">Enter</button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <h1>Created by JN. Nayem</h1>
+        </div>
+
+        <!-- Site Selection -->
+        <div class="site-selection">
+            <button class="site-btn active" data-site="1xbet">1xBet</button>
+            <button class="site-btn" data-site="mostbet">Mostbet</button>
+            <button class="site-btn" data-site="parimatch">Parimatch</button>
+        </div>
+
+        <!-- Prediction Display -->
+        <div class="prediction-container">
+            <div class="prediction-circle">
+                <div class="prediction-value" id="predictionValue">1.85x</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2024 Aviator Predictor Pro | All Rights Reserved</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
