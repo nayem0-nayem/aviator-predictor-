@@ -3,39 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Predictor</title>
+    <title>Aviator Predictor Pro</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Aviator Predictor</h1>
-        <div class="game-container">
-            <div class="prediction-section">
+    <!-- Password Protection Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <h1>AVIATOR PREDICTOR PRO</h1>
+            <p>Created By <span class="creator">JN.NAYEM</span></p>
+            <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off">
+            <button onclick="checkPassword()">Unlock System</button>
+            <p id="loginMessage" class="login-message"></p>
+        </div>
+    </div>
+
+    <!-- Main Application (hidden until authenticated) -->
+    <div id="appContainer" class="container" style="display:none;">
+        <header>
+            <div class="creator-header">
+                <h1>AVIATOR PREDICTOR PRO</h1>
+                <p>Created By <span class="creator">JN.NAYEM</span></p>
+            </div>
+            <div class="header-controls">
+                <div class="session-timer">
+                    <span>Session expires in: </span>
+                    <span id="sessionTimer">05:00</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Lock System</button>
+            </div>
+        </header>
+
+        <div class="prediction-section">
+            <div class="current-prediction">
                 <h2>Next Round Prediction</h2>
                 <div id="predictionValue" class="prediction-value">1.00x</div>
                 <div class="confidence-meter">
                     <div class="confidence-fill" id="confidenceFill"></div>
                 </div>
                 <p class="confidence-text">Confidence: <span id="confidencePercent">0%</span></p>
+                <p class="update-text">Next update in: <span id="countdown">30</span>s</p>
             </div>
             
-            <div class="verification-section">
-                <h3>Provable Fair Verification</h3>
-                <div class="input-group">
-                    <input type="text" id="serverSeed" placeholder="Server Seed">
-                    <input type="text" id="clientSeed" placeholder="Client Seed" value="user123">
-                    <input type="number" id="nonce" placeholder="Nonce" value="1">
-                    <button onclick="verifyRound()">Verify Round</button>
-                </div>
-                <div id="verificationResult" class="verification-result"></div>
+            <div class="history-chart">
+                <canvas id="historyChart"></canvas>
             </div>
-            
-            <div class="history-section">
-                <h3>Recent History</h3>
-                <div id="historyList" class="history-list">
-                    <!-- History will be populated here -->
-                </div>
+        </div>
+
+        <div class="verification-section">
+            <h3>Provable Fair Verification</h3>
+            <div class="input-group">
+                <input type="text" id="serverSeed" placeholder="Server Seed">
+                <input type="text" id="clientSeed" placeholder="Client Seed" value="user123">
+                <input type="number" id="nonce" placeholder="Nonce" value="1">
+                <button onclick="verifyRound()">Verify Round</button>
             </div>
+            <div id="verificationResult" class="verification-result"></div>
+        </div>
+
+        <div class="history-section">
+            <h3>Prediction History <span class="refresh-btn" onclick="refreshData()">↻ Refresh</span></h3>
+            <div id="historyList" class="history-list">
+                <!-- History will be populated here -->
+            </div>
+        </div>
+
+        <div class="info-section">
+            <p>🚨 Important: Predictions are statistical estimates only. There is no guaranteed outcome in gambling.</p>
+            <p>🔒 Session ID: <span id="sessionId"></span></p>
         </div>
     </div>
 
