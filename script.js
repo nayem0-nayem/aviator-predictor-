@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Prediction circle click event
+    const predictionCircle = document.getElementById('predictionCircle');
+    predictionCircle.addEventListener('click', function() {
+        generateNewPrediction();
+    });
+
     // Hide dashboard initially
     document.getElementById('dashboard').style.display = 'none';
 });
@@ -106,7 +112,4 @@ function startPredictionCycle() {
     
     // Initial prediction
     generateNewPrediction();
-    
-    // Update prediction every 5-10 seconds
-    setInterval(generateNewPrediction, 5000 + Math.random() * 5000);
-                        }
+}
